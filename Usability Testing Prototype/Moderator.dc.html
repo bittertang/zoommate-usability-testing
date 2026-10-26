@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>ZoomMate · Moderator</title>
+<style>html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,sans-serif}a{color:#2D6BF0}a:hover{color:#1A4FC0}</style>
+<script src="zm-sync.js"></script>
+</helmet>
+<div style="min-height:100vh;box-sizing:border-box;padding:28px;display:flex;justify-content:center;background:{{ t.page }};color:{{ t.text }};transition:background .2s,color .2s">
+  <div style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;align-items:flex-end;gap:12px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:{{ t.muted }}">ZoomMate pilot</span>
+        <span style="font-size:22px;font-weight:700">Moderator</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:2px;height:36px;box-sizing:border-box;padding:0 3px 0 10px;border-radius:9px;background:{{ t.seg }};border:1px solid {{ t.border }}">
+        <button onClick="{{ copyCode }}" title="Copy session code" style="height:28px;padding:0 6px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;color:{{ t.text }}">
+          <span style="font-size:14px;font-weight:700;letter-spacing:.1em;font-variant-numeric:tabular-nums">{{ code }}</span>
+          <sc-if value="{{ notCopied }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ t.muted }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg></sc-if>
+          <sc-if value="{{ copied }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F9D55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+        </button>
+        <button onClick="{{ newCode }}" title="New session code" aria-label="New session code" style="width:28px;height:28px;padding:0;border:none;border-radius:6px;background:transparent;color:{{ t.muted }};cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>
+        </button>
+      </div>
+      <div style="display:flex;padding:3px;border-radius:9px;background:{{ t.seg }};border:1px solid {{ t.border }}">
+        <button onClick="{{ toLight }}" title="Light mode" aria-label="Light mode" style="width:32px;height:28px;padding:0;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:{{ lightBg }};color:{{ lightColor }};box-shadow:{{ lightShadow }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        </button>
+        <button onClick="{{ toDark }}" title="Dark mode" aria-label="Dark mode" style="width:32px;height:28px;padding:0;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:{{ darkBg }};color:{{ darkColor }};box-shadow:{{ darkShadow }}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div role="tablist" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;padding:4px;border-radius:10px;background:{{ t.card }};border:1px solid {{ t.border }}">
+        <button role="tab" onClick="{{ toStudy }}" style="height:36px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;background:{{ studyTabBg }};color:{{ studyTabColor }};box-shadow:{{ studyTabShadow }}">Study session</button>
+        <button role="tab" onClick="{{ toTutorial }}" style="height:36px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;background:{{ tutTabBg }};color:{{ tutTabColor }};box-shadow:{{ tutTabShadow }}">Tutorial</button>
+      </div>
+      <sc-if value="{{ isTutorial }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;line-height:1.5;color:{{ t.muted }};padding:0 2px;text-wrap:pretty">Notifications, chat and the activity log show placeholder text only.</span>
+      </sc-if>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:{{ t.muted }};padding:6px 2px 0">Connection</span>
+
+
+    <div style="position:relative">
+      <button onClick="{{ toggleMenu }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:{{ t.card }};border:1px solid {{ menuBorder }};color:{{ t.text }};cursor:default;text-align:left;font-family:inherit">
+        <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ dotColor }}"></span>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:13px;font-weight:600">{{ statusTitle }}</span>
+          <sc-for list="{{ clientRows }}" as="c" hint-placeholder-count="0">
+            <span style="font-size:12px;color:{{ t.muted }}">{{ c.text }}</span>
+          </sc-for>
+          <span style="font-size:12px;color:{{ t.muted }};text-wrap:pretty">{{ statusSub }}</span>
+        </div>
+      </button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:5;padding:6px;border-radius:10px;background:{{ t.card }};border:1px solid {{ t.border }};box-shadow:{{ t.shadow }};display:flex;flex-direction:column;gap:2px">
+          <sc-for list="{{ protos }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.go }}" style="min-height:44px;border-radius:7px;border:none;background:{{ p.bg }};color:{{ p.color }};cursor:pointer;text-align:left;padding:6px 12px;display:flex;align-items:center;gap:10px;font-family:inherit">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:13px;font-weight:600">{{ p.label }}</span>
+                <span style="font-size:12px;color:{{ t.muted }}">{{ p.sub }}</span>
+              </div>
+              <span style="color:#1F9D55">{{ p.check }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+
+    </div>
+    <sc-if value="{{ isTutorial }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:{{ t.muted }};padding:6px 2px 0">Highlight</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ hlOptions }}" as="o" hint-placeholder-count="6">
+          <button onClick="{{ o.pick }}" style="height:34px;padding:0 12px;border-radius:999px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">{{ o.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:{{ t.muted }};padding:6px 2px 0">Notifications</span>
+      <button onClick="{{ trigger }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:inherit">
+        <span>Trigger notification</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">T</span>
+      </button>
+      <sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
+          <button onClick="{{ audioIssue }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;font-family:inherit;text-align:left">
+            <span>Audio issue (2A)</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">A</span>
+          </button>
+          <button onClick="{{ connIssue }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;font-family:inherit;text-align:left">
+            <span>Connection issue (3A)</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">C</span>
+          </button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ is2A }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:10px;border:1px solid #5B8CFF;background:{{ a2Bg }}">
+          <span style="font-size:12px;font-weight:600;color:{{ t.muted }};padding:0 2px">Audio issue showing · act for the participant</span>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+          <button onClick="{{ fix }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 12px;font-family:inherit;text-align:left">
+            <span>Fix for me</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">X</span>
+          </button>
+          <button onClick="{{ guide }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 12px;font-family:inherit;text-align:left">
+            <span>Guide me</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">G</span>
+          </button>
+          <button onClick="{{ dismiss }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 12px;font-family:inherit;text-align:left">
+            <span>Dismiss</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">D</span>
+          </button>
+          </div>
+        </div>
+      </sc-if>
+      <button onClick="{{ dismiss }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:inherit;opacity:{{ dismissOpacity }}">
+        <span>Dismiss notification</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">D</span>
+      </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:{{ t.muted }};padding:6px 2px 0">Session controls</span>
+      <button onClick="{{ hey }}" style="height:52px;border-radius:10px;border:1px solid {{ heyBorder }};background:{{ heyBg }};color:{{ heyColor }};font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:inherit">
+        <span>{{ heyLabel }}</span><span style="font-size:12px;font-weight:500;color:{{ heyKey }}">H</span>
+      </button>
+      <div style="height:52px;box-sizing:border-box;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};display:flex;align-items:center;gap:8px;padding:0 8px 0 16px">
+        <span style="flex:1;font-size:15px;font-weight:600">Countdown</span>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:8px;background:{{ t.step }}">
+          <button onClick="{{ set2m }}" style="height:32px;padding:0 12px;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;background:{{ c2Bg }};color:{{ c2Color }}">2 min</button>
+          <button onClick="{{ set5s }}" style="height:32px;padding:0 12px;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;background:{{ c5Bg }};color:{{ c5Color }}">5 sec</button>
+        </div>
+      </div>
+      <button onClick="{{ reset }}" style="height:52px;border-radius:10px;border:1px solid {{ t.border }};background:{{ t.btn }};color:{{ t.text }};font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:inherit">
+        <span>Reset prototype</span><span style="font-size:12px;font-weight:500;color:{{ t.key }}">R</span>
+      </button>
+    </div>
+
+    <span style="font-size:12px;line-height:1.5;color:{{ t.muted }};text-wrap:pretty">Buttons act on every connected view. Projector and laptop views of the same prototype stay in sync with each other. All computers need internet.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const GROUPS = [
+  { id: "chat", label: "Projector View + Laptop View", sub: "Each computer opens its own view", projector: "Projector View.dc.html" }
+];
+const SHORT = {
+  "Projector View.dc.html": "Projector View",
+  "Laptop View.dc.html": "Laptop View",
+  "2A - Troubleshooting (Projector).dc.html": "2A",
+  "2B + 2C - Troubleshooting (Laptop).dc.html": "2B + 2C",
+  "3A - Troubleshooting (Projector + Laptop).dc.html": "3A"
+};
+const FILE_2A = "2A - Troubleshooting (Projector).dc.html";
+const VIEW_LABEL = { projector: "Projector", laptop: "Laptop", both: "Projector + laptop" };
+const THEMES = {
+  dark: { page: "#0B0C0F", text: "#E6E6E9", muted: "#8A8A90", card: "#15161A", btn: "#1C1D22", border: "#33353B", step: "#2A2C32", key: "#7A7A80", seg: "#15161A", segOn: "#2A2C32", sel: "#26282E", selText: "#fff", itemText: "#B0B0B6", shadow: "0 12px 30px rgba(0,0,0,.5)", openBorder: "#44474F", idle: "#5A5A60" },
+  light: { page: "#F4F4F6", text: "#141518", muted: "#6A6A70", card: "#FFFFFF", btn: "#FFFFFF", border: "#D9D9DE", step: "#EEEEF1", key: "#8A8A90", seg: "#E9E9EC", segOn: "#FFFFFF", sel: "#EEEEF1", selText: "#141518", itemText: "#4A4A50", shadow: "0 12px 30px rgba(0,0,0,.12)", openBorder: "#B8B8BF", idle: "#C4C4CA" }
+};
+const genCode = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c = ""; for (let i = 0; i < 6; i++) c += a[Math.floor(Math.random() * a.length)]; return c; };
+class Component extends DCLogic {
+  state = { clients: {}, secs: 120, now: Date.now(), code: "", copied: false, tutorial: (() => { try { return localStorage.getItem("zm-mod-tutorial") === "1"; } catch (e) { return false; } })(), theme: (() => { try { return localStorage.getItem("zm-mod-theme2") || "light"; } catch (e) { return "light"; } })() };
+  componentDidMount() {
+    const Z = window.ZMSync;
+    if (!Z) return;
+    const code = Z.session() || genCode();
+    Z.setSession(code);
+    this.setState({ code });
+    this.off = Z.on(m => {
+      if (m.role !== "proto" || !m.id) return;
+      if (m.bye) { this.setState(s => { const c = { ...s.clients }; delete c[m.id]; return { clients: c }; }); return; }
+      this.setState(s => ({ clients: { ...s.clients, [m.id]: { ...m, lastSeen: Date.now() } }, secs: m.secs || s.secs, heyOn: m.group === "chat" ? !!m.heyGlow : s.heyOn }));
+      if (m.group === "chat" && !!m.tutorial !== !!this.state.tutorial) this.send({ type: "tutorial", on: !!this.state.tutorial });
+      if (m.group === "chat" && (m.hl || null) !== (this.state.hl || null)) this.send({ type: "highlight", target: this.state.hl || null });
+    });
+    this.send({ type: "ping" });
+    this.iv = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    this.onKey = e => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = (e.key || "").toLowerCase();
+      if (k === "t") this.send({ type: "trigger" });
+      if (k === "h") { const v = !this.state.heyOn; this.setState({ heyOn: v }); this.send({ type: "hey", on: v }); }
+      if (k === "r") this.send({ type: "reset" });
+      if (k === "d") this.send({ type: "dismiss" });
+      const chat = this.live().some(c => c.group === "chat");
+      if (chat && k === "a") this.send({ type: "issue", issue: "audio" });
+      if (chat && k === "c") this.send({ type: "issue", issue: "conn" });
+      if (this.has2A() && k === "x") this.send({ type: "issueAct", action: "fix" });
+      if (this.has2A() && k === "g") this.send({ type: "issueAct", action: "guide" });
+    };
+    window.addEventListener("keydown", this.onKey);
+  }
+  componentWillUnmount() { clearInterval(this.iv); window.removeEventListener("keydown", this.onKey); if (this.off) this.off(); }
+  send(msg) { if (window.ZMSync) window.ZMSync.post({ role: "mod", ...msg }); }
+  live() { const n = this.state.now; return Object.values(this.state.clients).filter(c => c.group === "chat" && n - c.lastSeen < 35000); }
+  anyHey() { return this.live().some(c => c.heyGlow); }
+  has2A() { return this.live().some(c => c.issue === "audio"); }
+  setTheme(theme) { this.setState({ theme }); try { localStorage.setItem("zm-mod-theme2", theme); } catch (e) {} }
+  renderVals() {
+    const s = this.state;
+    const t = THEMES[s.theme] || THEMES.dark;
+    const isLight = s.theme === "light";
+    const live = this.live();
+    const n = live.length;
+    const on = !!s.heyOn;
+    const showing = live.some(c => c.cardOpen);
+    return {
+      t,
+      toLight: () => this.setTheme("light"),
+      toDark: () => this.setTheme("dark"),
+      lightBg: isLight ? t.segOn : "transparent", lightColor: isLight ? t.text : t.muted, lightShadow: isLight ? "0 1px 3px rgba(0,0,0,.12)" : "none",
+      darkBg: !isLight ? t.segOn : "transparent", darkColor: !isLight ? t.text : t.muted, darkShadow: !isLight ? "0 1px 3px rgba(0,0,0,.4)" : "none",
+      code: s.code || "······",
+      suffix: "?session=" + (s.code || ""),
+      copied: !!s.copied, notCopied: !s.copied,
+      copyLabel: s.copied ? "Copied" : "Copy",
+      copyCode: () => {
+        const txt = "?session=" + s.code;
+        const done = () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); };
+        try { navigator.clipboard.writeText(txt).then(done, done); } catch (e) { done(); }
+      },
+      newCode: () => { const c = genCode(); if (window.ZMSync) window.ZMSync.setSession(c); this.setState({ code: c, clients: {} }); this.send({ type: "ping" }); },
+      dotColor: n ? (isLight ? "#1F9D55" : "#3CCB7F") : t.idle,
+      statusTitle: n === 0 ? "No prototype connected" : n === 1 ? "1 view connected" : `${n} views connected`,
+      clientRows: live.map(c => ({ text: `${VIEW_LABEL[c.view] || "View"}: ${SHORT[c.file] || c.file}${c.tutorial ? " · tutorial" : ""}${c.cardOpen ? " · notification showing" : ""}` })),
+      statusSub: n ? "" : `On each computer, open Projector View or Laptop View with ?session=${s.code} at the end of its address.`,
+      isTutorial: !!s.tutorial,
+      toStudy: () => { if (s.tutorial) this.renderVals().toggleTutorial(); },
+      toTutorial: () => { if (!s.tutorial) this.renderVals().toggleTutorial(); },
+      studyTabBg: s.tutorial ? "transparent" : "#2D6BF0",
+      studyTabColor: s.tutorial ? t.text : "#fff",
+      studyTabShadow: s.tutorial ? "none" : "0 1px 2px rgba(0,0,0,.2)",
+      tutTabBg: s.tutorial ? "#2D6BF0" : "transparent",
+      tutTabColor: s.tutorial ? "#fff" : t.text,
+      tutTabShadow: s.tutorial ? "0 1px 2px rgba(0,0,0,.2)" : "none",
+      toggleTutorial: () => { const on = !s.tutorial; this.setState({ tutorial: on }); try { localStorage.setItem("zm-mod-tutorial", on ? "1" : "0"); } catch (e) {} this.send({ type: "tutorial", on }); if (!on && s.hl) { this.setState({ hl: null }); this.send({ type: "highlight", target: null }); }; },
+      tutBg: s.tutorial ? (isLight ? "#EEF3FF" : "#16203A") : t.card,
+      tutBorder: s.tutorial ? "#5B8CFF" : t.border,
+      tutTrack: s.tutorial ? "#2D6BF0" : t.step,
+      tutKnob: s.tutorial ? "19px" : "3px",
+      hlOptions: ["None", "Notification", "Answer", "Pin", "Dismiss", "ZoomMate icon", "ZoomMate log"].map(label => {
+        const sel = (s.hl || "None") === label;
+        return { label, bg: sel ? "#2D6BF0" : t.btn, border: sel ? "#5B8CFF" : t.border, color: sel ? "#fff" : t.text,
+          pick: () => { const target = label === "None" ? null : label; this.setState({ hl: target }); this.send({ type: "highlight", target }); } };
+      }),
+      trigger: () => this.send({ type: "trigger" }),
+      hey: () => { this.setState({ heyOn: !on }); this.send({ type: "hey", on: !on }); },
+      heyOn: () => this.send({ type: "hey", on: true }),
+      heyOff: () => this.send({ type: "hey", on: false }),
+      heyOffOpacity: on ? "1" : "0.45",
+      heyLabel: on ? "Stop \u2018Hey ZoomMate\u2019 glow" : "\u2018Hey ZoomMate\u2019 glow",
+      heyBg: on ? "#2D6BF0" : t.btn,
+      heyBorder: on ? "#5B8CFF" : t.border,
+      heyColor: on ? "#fff" : t.text,
+      heyKey: on ? "#D6E1FF" : t.key,
+      secs: s.secs,
+      set2m: () => { this.setState({ secs: 120 }); this.send({ type: "secs", secs: 120 }); },
+      set5s: () => { this.setState({ secs: 5 }); this.send({ type: "secs", secs: 5 }); },
+      c2Bg: s.secs === 5 ? "transparent" : "#2D6BF0", c2Color: s.secs === 5 ? t.text : "#fff",
+      c5Bg: s.secs === 5 ? "#2D6BF0" : "transparent", c5Color: s.secs === 5 ? "#fff" : t.text,
+      minus: () => { const v = Math.max(5, s.secs - 5); this.setState({ secs: v }); this.send({ type: "secs", secs: v }); },
+      plus: () => { const v = Math.min(300, s.secs + 5); this.setState({ secs: v }); this.send({ type: "secs", secs: v }); },
+      reset: () => { this.setState({ heyOn: false }); this.send({ type: "reset" }); },
+      dismiss: () => this.send({ type: "dismiss" }),
+      dismissOpacity: showing ? "1" : "0.45",
+      is2A: live.some(c => c.issue === "audio"),
+      a2Bg: isLight ? "#EEF3FF" : "#16203A",
+      isChat: live.some(c => c.group === "chat"),
+      audioIssue: () => this.send({ type: "issue", issue: "audio" }),
+      connIssue: () => this.send({ type: "issue", issue: "conn" }),
+      fix: () => this.send({ type: "issueAct", action: "fix" }),
+      guide: () => this.send({ type: "issueAct", action: "guide" }),
+      protos: GROUPS.map(g => {
+        const here = live.some(c => c.group === g.id);
+        return { label: g.label, sub: g.sub, check: here ? "✓" : "", go: () => { this.send({ type: "goto", group: g.id, file: g.projector }); this.setState({ menuOpen: false }); }, bg: here ? t.sel : "transparent", color: here ? t.selText : t.itemText };
+      }),
+      menuOpen: !!s.menuOpen,
+      toggleMenu: () => {},
+      menuChevron: "0deg",
+      menuBorder: s.menuOpen ? t.openBorder : t.border
+    };
+  }
+}
+</script>
+</body>
+</html>

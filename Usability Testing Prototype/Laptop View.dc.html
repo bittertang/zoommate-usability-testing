@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+html,body{margin:0;padding:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2D6BF0}a:hover{color:#1F55C8}
+button{font-family:inherit}
+textarea{font-family:inherit}
+@keyframes zmPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,200,75,.0),0 0 6px 1px rgba(245,200,75,.35)}50%{box-shadow:0 0 0 3px rgba(245,200,75,.18),0 0 16px 5px rgba(245,200,75,.55)}}
+@keyframes zmHey{0%,100%{box-shadow:0 0 0 2px #5B8CFF,0 0 14px 2px rgba(91,140,255,.35),0 10px 30px rgba(0,0,0,.45)}50%{box-shadow:0 0 0 3px #7FA6FF,0 0 34px 12px rgba(91,140,255,.7),0 10px 30px rgba(0,0,0,.45)}}
+@keyframes zmMic{0%,100%{box-shadow:0 0 0 0 rgba(217,58,58,.45)}50%{box-shadow:0 0 0 6px rgba(217,58,58,0)}}
+@keyframes zmTut{0%,100%{box-shadow:0 0 0 3px #F5B83B,0 0 18px 4px rgba(245,184,59,.45),0 10px 30px rgba(0,0,0,.45)}50%{box-shadow:0 0 0 5px #FFD36B,0 0 42px 14px rgba(245,184,59,.75),0 10px 30px rgba(0,0,0,.45)}}
+@keyframes zmIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes zmCollapse{from{opacity:1;transform:none}to{opacity:0;transform:translate(40px,-40px) scale(.08)}}
+@keyframes zmToast{0%{opacity:0;transform:translate(-50%,-8px)}12%{opacity:1;transform:translate(-50%,0)}85%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-4px)}}
+</style>
+<script src="zm-sync.js"></script>
+</helmet>
+<div style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden">
+<div data-screen-label="Meeting" style="position:relative;flex-shrink:0;width:1440px;height:988px;transform:scale({{ scale }});transform-origin:center;background:#232323;display:flex;flex-direction:column;overflow:hidden;color:#fff">
+
+  <div style="height:52px;flex-shrink:0;background:#141518;display:flex;align-items:center;padding:0 16px;position:relative;z-index:5">
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="width:12px;height:12px;border-radius:50%;background:#FF5F57"></div>
+      <div style="width:12px;height:12px;border-radius:50%;background:#FEBC2E"></div>
+      <div style="width:12px;height:12px;border-radius:50%;background:#28C840"></div>
+    </div>
+    <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:13px;color:#C9C9CC;display:flex;gap:10px;align-items:center">
+      <span style="font-weight:600;color:#fff">PSYC 210 · Cognitive Psychology</span>
+      <span style="color:#8A8A8E">Lecture 24 · 48:12</span>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+      <button title="ZoomMate" onClick="{{ onIconClick }}" style="width:34px;height:34px;border-radius:50%;border:none;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;outline:{{ iconOutline }};outline-offset:2px;background:{{ iconBg }};color:{{ iconColor }};animation:{{ glowAnim }};transition:background .4s,color .4s;outline:{{ hlZm }};outline-offset:4px">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2C12.6 7.4 16.6 11.4 22 12C16.6 12.6 12.6 16.6 12 22C11.4 16.6 7.4 12.6 2 12C7.4 11.4 11.4 7.4 12 2Z" fill="currentColor"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;min-height:0;position:relative">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:28px;min-width:0">
+      <div style="width:100%;max-width:1060px;aspect-ratio:16/9;background:#2E2E30;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#76767A;font:12px ui-monospace,Menlo,monospace;letter-spacing:.04em">INSTRUCTOR'S SHARED SLIDES</div>
+    </div>
+
+    <sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="width:340px;flex-shrink:0;background:#1B1B1D;border-left:1px solid #2C2C2F;display:flex;flex-direction:column;min-height:0">
+        <div style="height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #2C2C2F;font-size:14px;font-weight:600">
+          <span>Chat</span>
+          <button onClick="{{ toggleChat }}" style="background:none;border:none;color:#9A9A9E;font-size:13px;cursor:pointer;padding:4px">Close</button>
+        </div>
+        <sc-if value="{{ hasPin }}" hint-placeholder-val="{{ false }}">
+          <div style="margin:12px 12px 4px;padding:12px 14px;background:#FFFFFF;color:#141518;border-radius:10px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:#5A5A60;text-transform:uppercase;letter-spacing:.05em">
+              <span>Pinned by you</span><span>{{ pinCountLabel }}</span>
+            </div>
+            <div style="font-size:12px;color:#5A5A60">Re: {{ latestPin.topic }}</div>
+            <div style="font-size:14px;line-height:1.4;text-wrap:pretty">{{ latestPin.text }}</div>
+          </div>
+        </sc-if>
+        <div style="flex:1;overflow:auto;padding:12px 16px;display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ chatMessages }}" as="m" hint-placeholder-count="6">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="display:flex;gap:8px;align-items:baseline;font-size:12px">
+                <span style="font-weight:600;color:#fff">{{ m.name }}</span>
+                <span style="color:#8A8A8E">{{ m.time }}</span>
+              </div>
+              <div style="font-size:13px;line-height:1.4;color:#D8D8DB">{{ m.text }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding:12px;border-top:1px solid #2C2C2F">
+          <div style="padding:10px 12px;border:1px solid #3A3A3E;border-radius:8px;font-size:13px;color:#7A7A7E">Message everyone</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ cardOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:8px;right:{{ cardRight }};transition:right .3s ease;width:365px;z-index:10;animation:{{ cardAnim }};transform-origin:top right">
+        <sc-if value="{{ tutArrow }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:-8px;border:3px solid #F5B83B;border-radius:18px;background:rgba(245,184,59,.12);pointer-events:none;z-index:11"></div>
+        </sc-if>
+        <sc-if value="{{ hasBack2 }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;inset:0;background:#E9E9EC;border-radius:12px;transform:translateY(16px) scale(.92);box-shadow:0 6px 20px rgba(0,0,0,.35)"></div>
+        </sc-if>
+        <sc-if value="{{ hasBack1 }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;inset:0;background:#F4F4F6;border-radius:12px;transform:translateY(8px) scale(.96);box-shadow:0 6px 20px rgba(0,0,0,.35)"></div>
+        </sc-if>
+        <div onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:relative;background:#FFFFFF;color:#141518;border-radius:12px;box-shadow:{{ cardShadow }};transition:box-shadow .3s;animation:{{ heyAnim }};overflow:hidden">
+          <sc-if value="{{ showX }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ dismiss }}" title="Close" style="position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;border:none;background:#F1F1F3;color:#5A5A60;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2" style-hover="background:#E2E2E6;color:#141518">✕</button>
+          </sc-if>
+          <div style="display:flex;gap:14px;padding:16px 16px 18px">
+            <div style="width:12px;height:12px;background:#2D6BF0;transform:rotate(45deg);flex-shrink:0;margin:5px 2px 0"></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:15px;font-weight:700;line-height:1.3;text-wrap:pretty">{{ current.heading }}</div>
+
+              <sc-if value="{{ isMain }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ toggleExpand }}" style="align-self:flex-start;background:none;border:none;padding:2px 0;margin-top:2px;color:#2D6BF0;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
+                  <span>{{ expandLabel }}</span>
+                  <span style="display:inline-block;font-size:10px;transition:transform .2s;transform:rotate({{ chevronRot }})">▾</span>
+                </button>
+                <sc-if value="{{ expanded }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;border:1px solid #E4E4E8;border-radius:8px;overflow:hidden;margin-top:4px">
+                    <sc-for list="{{ current.messages }}" as="m" hint-placeholder-count="3">
+                      <div style="padding:10px 12px;border-top:1px solid #EEEEF1;display:flex;flex-direction:column;gap:3px">
+                        <div style="display:flex;justify-content:space-between;font-size:12px">
+                          <span style="font-weight:600">{{ m.name }}</span>
+                          <span style="color:#7A7A80">{{ m.time }}</span>
+                        </div>
+                        <div style="font-size:13px;line-height:1.4;color:#33333A">{{ m.text }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button onClick="{{ toAnswer }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer;outline:{{ hlRespond }};outline-offset:3px">Answer</button>
+                  <button onClick="{{ toPin }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlPin }};outline-offset:3px" style-hover="background:#F3F3F5">Pin answer</button>
+                  <button onClick="{{ dismiss }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlDismiss }};outline-offset:3px" style-hover="background:#F3F3F5">Dismiss</button>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ isPreview }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+                  <div style="display:flex;flex-direction:column;border:1px solid #E4E4E8;border-radius:8px;overflow:hidden">
+                    <sc-for list="{{ current.messages }}" as="m" hint-placeholder-count="3">
+                      <div style="padding:10px 12px;border-top:1px solid #EEEEF1;display:flex;flex-direction:column;gap:3px">
+                        <div style="display:flex;justify-content:space-between;font-size:12px">
+                          <span style="font-weight:600">{{ m.name }}</span>
+                          <span style="color:#7A7A80">{{ m.time }}</span>
+                        </div>
+                        <div style="font-size:13px;line-height:1.4;color:#33333A">{{ m.text }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ toMain }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer">← Back</button>
+                    <button onClick="{{ toAnswer }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer;outline:{{ hlRespond }};outline-offset:3px">Answer</button>
+                    <button onClick="{{ toPin }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlPin }};outline-offset:3px">Pin answer</button>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ isPin }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+                  <div style="position:relative">
+                    <textarea ref="{{ taRef }}" value="{{ answer }}" onChange="{{ onAnswer }}" placeholder="{{ answerPlaceholder }}" rows="3" style="width:100%;box-sizing:border-box;resize:none;border:1px solid {{ micBorder }};border-radius:8px;padding:10px 42px 10px 12px;font-size:13px;line-height:1.4;color:#141518;outline:none"></textarea>
+                    <button onClick="{{ onMic }}" title="Dictate with voice" aria-label="Dictate with voice" style="position:absolute;right:8px;bottom:10px;width:28px;height:28px;border-radius:50%;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;background:{{ micBg }};color:{{ micColor }};animation:{{ micAnim }}">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg>
+                    </button>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ doPin }}" style="height:32px;padding:0 18px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer;opacity:{{ pinOpacity }}">{{ submitLabel }}</button>
+                    <sc-if value="{{ isAnswerMode }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ doPinFromAnswer }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:#F3F3F5">Pin</button>
+                    </sc-if>
+                    <button onClick="{{ toMain }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer">Cancel</button>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          <div style="height:3px;background:#ECECEF">
+            <div style="height:100%;width:100%;background:#2D6BF0;transform-origin:left;transform:scaleX({{ progress }})"></div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ issueOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:8px;right:{{ cardRight }};transition:right .3s ease;width:365px;z-index:10;animation:{{ issueAnim }};transform-origin:top right">
+        <sc-if value="{{ tutArrow }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:-8px;border:3px solid #F5B83B;border-radius:18px;background:rgba(245,184,59,.12);pointer-events:none;z-index:11"></div>
+        </sc-if>
+        <div onMouseEnter="{{ iEnter }}" onMouseLeave="{{ iLeave }}" style="position:relative;background:#FFFFFF;color:#141518;border-radius:12px;box-shadow:{{ cardShadow }};transition:box-shadow .3s;animation:{{ heyAnim }};overflow:hidden">
+          <sc-if value="{{ iShowX }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ iDismiss }}" title="Close" style="position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;border:none;background:#F1F1F3;color:#5A5A60;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2" style-hover="background:#E2E2E6;color:#141518">✕</button>
+          </sc-if>
+          <div style="display:flex;gap:12px;padding:16px 16px 18px">
+            <div style="flex-shrink:0;width:22px;height:22px;color:{{ issueIconTone }};margin-top:-1px">
+              <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2.5 L23 21.5 H1 Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><rect x="11" y="9" width="2" height="6.5" rx="1" fill="#fff"></rect><circle cx="12" cy="18" r="1.2" fill="#fff"></circle></svg>
+            </div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:15px;font-weight:700;line-height:1.3">{{ issueHeading }}</div>
+              <div style="font-size:13px;line-height:1.4;color:#4A4A50;text-wrap:pretty">{{ issueBody }}</div>
+              <sc-if value="{{ issueHasNote }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:13px;line-height:1.4;color:#7A7A80;text-wrap:pretty">{{ issueNote }}</div>
+              </sc-if>
+              <sc-if value="{{ iMainFix }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button onClick="{{ iFix }}" style="height:32px;padding:0 18px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer;outline:{{ hlRespond }};outline-offset:3px">Fix for me</button>
+                  <button onClick="{{ iGuide }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:#F3F3F5">Guide me</button>
+                  <button onClick="{{ iDismiss }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlDismiss }};outline-offset:3px" style-hover="background:#F3F3F5">Dismiss</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ iMainStart }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button onClick="{{ iStart }}" style="height:32px;padding:0 16px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer;outline:{{ hlRespond }};outline-offset:3px">Start, I'm at my laptop</button>
+                  <button onClick="{{ iDismiss }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlDismiss }};outline-offset:3px" style-hover="background:#F3F3F5">Dismiss</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ iDevice }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button onClick="{{ iStart }}" style="height:32px;padding:0 16px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer;outline:{{ hlRespond }};outline-offset:3px">Start</button>
+                  <button onClick="{{ iFix }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlRespond }};outline-offset:3px" style-hover="background:#F3F3F5">Nevermind, fix</button>
+                  <button onClick="{{ iDismiss }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer;outline:{{ hlDismiss }};outline-offset:3px" style-hover="background:#F3F3F5">Dismiss</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ iDone }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button onClick="{{ iConfirm }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Confirm</button>
+                  <button onClick="{{ iRetry }}" style="height:32px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:#F3F3F5">Override</button>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          <div style="height:3px;background:#ECECEF">
+            <div style="height:100%;width:100%;background:{{ iBarColor }};transform-origin:left;transform:scaleX({{ iProgress }});transition:background .3s"></div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ zmOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:8px;right:{{ cardRight }};width:400px;max-height:640px;z-index:11;background:#FFFFFF;color:#141518;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden;animation:zmIn .25s cubic-bezier(.2,.8,.2,1);outline:{{ hlLog }};outline-offset:4px">
+        <div style="padding:14px 16px 12px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #ECECEF">
+          <div style="display:flex;align-items:center;gap:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2C12.6 7.4 16.6 11.4 22 12C16.6 12.6 12.6 16.6 12 22C11.4 16.6 7.4 12.6 2 12C7.4 11.4 11.4 7.4 12 2Z" fill="#C9A227"></path></svg>
+            <span style="font-size:15px;font-weight:700;flex:1">ZoomMate</span>
+            <button onClick="{{ closeZm }}" title="Close" style="width:24px;height:24px;border-radius:50%;border:none;background:#F1F1F3;color:#5A5A60;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0" style-hover="background:#E2E2E6;color:#141518">✕</button>
+          </div>
+          <div style="display:flex;padding:3px;background:#F1F1F3;border-radius:9px">
+            <button onClick="{{ toChatTab }}" style="flex:1;height:30px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:{{ chatTabBg }};color:{{ chatTabColor }};box-shadow:{{ chatTabShadow }}">Chat</button>
+            <button onClick="{{ toLogTab }}" style="flex:1;height:30px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:{{ logTabBg }};color:{{ logTabColor }};box-shadow:{{ logTabShadow }}">Activity Log</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ isLogTab }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:6px;padding:12px 16px 4px">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+              <button onClick="{{ f.onClick }}" style="height:28px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }}">{{ f.label }}</button>
+            </sc-for>
+          </div>
+          <div style="flex:1;overflow:auto;padding:8px 16px 16px;display:flex;flex-direction:column">
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+            <div onClick="{{ g.onToggle }}" style="display:flex;align-items:center;gap:8px;padding:14px 0 2px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:{{ g.color }};cursor:{{ g.cursor }}">
+              <span>{{ g.label }}</span>
+              <span style="min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:0;background:{{ g.badgeBg }};color:{{ g.badgeColor }}">{{ g.count }}</span>
+              <span style="font-size:10px;display:inline-block;transition:transform .2s;transform:rotate({{ g.chevron }});opacity:{{ g.chevronOpacity }}">▾</span>
+            </div>
+            <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:40px 24px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid #F0F0F2">
+                <span style="font-size:12px;font-weight:600;color:#5A5A60;font-variant-numeric:tabular-nums;padding-top:3px">{{ e.time }}</span>
+                <span title="{{ e.kindLabel }}" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center">
+                  <sc-if value="{{ e.isQ }}" hint-placeholder-val="{{ false }}"><span style="width:11px;height:11px;background:#2D6BF0;transform:rotate(45deg)"></span></sc-if>
+                  <sc-if value="{{ e.isT }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5 L23 21.5 H1 Z" fill="#2D2BE0" stroke="#2D2BE0" stroke-width="1.5" stroke-linejoin="round"></path><rect x="11" y="9" width="2" height="6.5" rx="1" fill="#fff"></rect><circle cx="12" cy="18" r="1.2" fill="#fff"></circle></svg></sc-if>
+                </span>
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <span style="font-size:13px;line-height:1.45;text-wrap:pretty;font-style:{{ e.fontStyle }};color:{{ e.color }}">{{ e.text }}</span>
+                  <sc-if value="{{ e.hasSub }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13px;line-height:1.45;color:#4A4A50;text-wrap:pretty">{{ e.sub }}</span>
+                  </sc-if>
+                  <sc-if value="{{ e.hasSteps }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ e.onToggle }}" style="align-self:flex-start;background:none;border:none;padding:0;color:#2D6BF0;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
+                      <span>{{ e.toggleLabel }}</span>
+                      <span style="display:inline-block;font-size:9px;transition:transform .2s;transform:rotate({{ e.chevron }})">▾</span>
+                    </button>
+                    <sc-if value="{{ e.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:#F7F7F9;border-radius:8px">
+                        <sc-for list="{{ e.steps }}" as="st" hint-placeholder-count="3">
+                          <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;color:#33333A">
+                            <span style="flex-shrink:0;width:14px;height:14px;margin-top:1px;border-radius:50%;background:#DDF3E6;color:#1F9D55;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">✓</span>
+                            <span>{{ st }}</span>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </sc-if>
+                  <sc-if value="{{ e.canResolve }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ e.onResolve }}" style="align-self:flex-start;height:30px;padding:0 14px;margin-top:2px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:12px;font-weight:600;cursor:pointer">Resolve</button>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isChatTab }}" hint-placeholder-val="{{ false }}">
+          <div ref="{{ zmChatRef }}" style="flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:280px">
+            <sc-for list="{{ zmChat }}" as="c" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;gap:8px;align-self:{{ c.align }};max-width:85%">
+                <sc-if value="{{ c.isStep }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45;color:#33333A;padding:0 2px">
+                    <span style="flex-shrink:0;width:16px;height:16px;margin-top:1px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:{{ c.dotBg }};color:{{ c.dotColor }}">{{ c.mark }}</span>
+                    <span>{{ c.text }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.isBubble }}" hint-placeholder-val="{{ true }}">
+                  <div style="padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.45;background:{{ c.bg }};color:{{ c.color }};font-weight:{{ c.weight }}">{{ c.text }}</div>
+                </sc-if>
+                <sc-if value="{{ c.hasGuideActions }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ guideNext }}" style="height:30px;padding:0 14px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:12px;font-weight:600;cursor:pointer">{{ guideNextLabel }}</button>
+                    <button onClick="{{ guideFix }}" style="height:30px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:12px;font-weight:500;cursor:pointer" style-hover="background:#F3F3F5">Fix it for me</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.hasActions }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ iConfirm }}" style="height:30px;padding:0 14px;border-radius:7px;border:1px solid #141518;background:#141518;color:#fff;font-size:12px;font-weight:600;cursor:pointer">Confirm</button>
+                    <button onClick="{{ iRetry }}" style="height:30px;padding:0 14px;border-radius:7px;border:1px solid #CFCFD4;background:#fff;color:#141518;font-size:12px;font-weight:500;cursor:pointer" style-hover="background:#F3F3F5">Override</button>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ zmTyping }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-start;padding:10px 14px;border-radius:10px;background:#F1F1F3;color:#7A7A80;font-size:13px;letter-spacing:2px">•••</div>
+            </sc-if>
+          </div>
+          <div style="padding:12px;border-top:1px solid #ECECEF">
+            <div style="padding:10px 12px;border:1px solid #CFCFD4;border-radius:8px;font-size:13px;color:#7A7A80">Ask ZoomMate</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+      <div key="{{ toastKey }}" style="position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#FFFFFF;color:#141518;font-size:13px;font-weight:600;padding:10px 16px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;gap:8px;align-items:center;animation:zmToast 3s ease forwards;z-index:12">
+        <span style="color:#1F9D55">✓</span><span>{{ toastText }}</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="height:72px;flex-shrink:0;background:#141518;display:flex;align-items:center;padding:0 16px 0 90px;position:relative">
+    <div style="display:flex;gap:4px">
+      <div style="font-size:12px;color:#D8D8DB;padding:6px 12px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg><span>Mute</span></div>
+      <button onClick="{{ toggleVideo }}" style="font-size:12px;color:{{ videoColor }};padding:6px 12px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px" style-hover="background:#26272B">
+        <sc-if value="{{ videoOn }}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg></sc-if>
+        <sc-if value="{{ videoOff }}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3z"></path><path d="M2 3l20 18"></path></svg></sc-if>
+        <span>{{ videoLabel }}</span>
+      </button>
+    </div>
+    <div style="flex:1;display:flex;justify-content:center;gap:4px">
+      <div style="font-size:12px;color:#D8D8DB;padding:6px 12px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"></path></svg><span>Participants 48</span></div>
+      <button onClick="{{ toggleChat }}" style="font-size:12px;color:#D8D8DB;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;background:{{ chatBtnBg }};display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg><span>Chat</span></button>
+      <div style="position:relative">
+        <button onClick="{{ onSharing }}" style="font-size:12px;color:#D8D8DB;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;background:#26272B;display:flex;flex-direction:column;align-items:center;gap:4px;outline:{{ shareOutline }};outline-offset:2px;animation:{{ shareAnim }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3CCB7F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M12 14V8M9 11l3-3 3 3M8 21h8"></path></svg><span>Sharing ▴</span></button>
+        <sc-if value="{{ shareMenu }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;bottom:64px;left:50%;transform:translateX(-50%);width:220px;background:#2A2B2F;border:1px solid #3A3B40;border-radius:10px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:2px;z-index:20">
+            <button onClick="{{ onShareSound }}" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;border-radius:7px;cursor:pointer;font-size:13px;color:#fff;text-align:left;background:{{ soundItemBg }};outline:{{ soundOutline }};outline-offset:-2px">
+              <span style="width:14px;height:14px;border-radius:3px;border:1.5px solid #9A9A9E;display:flex;align-items:center;justify-content:center;font-size:10px;background:{{ soundBoxBg }}">{{ soundCheck }}</span>
+              <span>Share sound</span>
+            </button>
+            <div style="padding:9px 10px 9px 34px;font-size:13px;color:#C9C9CC">Optimize for video clip</div>
+            <div style="height:1px;background:#3A3B40;margin:4px 6px"></div>
+            <div style="padding:9px 10px 9px 34px;font-size:13px;color:#FF6B6B">Stop share</div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="font-size:12px;color:#D8D8DB;padding:6px 12px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3.5" fill="currentColor"></circle></svg><span>Record</span></div>
+      <div style="font-size:12px;color:#D8D8DB;padding:6px 12px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"></path></svg><span>Reactions</span></div>
+    </div>
+    <div style="font-size:13px;font-weight:600;color:#fff;background:#D93A3A;padding:9px 16px;border-radius:8px">End</div>
+  </div>
+
+  <div data-screen-label="Dock" style="height:88px;flex-shrink:0;background:#0A0B0D;display:flex;align-items:center;justify-content:center;border-top:1px solid #1E1F23">
+    <div style="display:flex;align-items:flex-end;gap:10px;padding:8px 14px 6px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+      <sc-for list="{{ dockApps }}" as="a" hint-placeholder-count="9">
+        <div title="{{ a.name }}" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;transition:opacity .4s;opacity:{{ a.opacity }}">
+          <sc-if value="{{ a.menuOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;bottom:66px;left:50%;transform:translateX(-50%);z-index:30;min-width:150px;padding:5px;border-radius:9px;background:#2A2B2F;border:1px solid #3A3B40;box-shadow:0 10px 26px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:1px">
+              <span style="padding:6px 10px 4px;font-size:11px;font-weight:600;color:#9A9AA0;white-space:nowrap">{{ a.name }}</span>
+              <div style="height:1px;background:#3A3B40;margin:2px 4px"></div>
+              <button onClick="{{ a.onQuit }}" style="text-align:left;padding:7px 10px;border:none;border-radius:6px;background:transparent;color:#fff;font-size:13px;cursor:pointer;white-space:nowrap" style-hover="background:#2D6BF0">Quit</button>
+            </div>
+          </sc-if>
+          <div onClick="{{ a.onClick }}" onContextMenu="{{ a.onClick }}" style="width:48px;height:48px;border-radius:12px;background:{{ a.bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:0 2px 6px rgba(0,0,0,.4);cursor:{{ a.cursor }}">{{ a.short }}</div>
+          <span style="width:4px;height:4px;border-radius:50%;background:{{ a.dot }}"></span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</div>
+
+<sc-if value="{{ facOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;top:12px;left:12px;z-index:9999;width:248px;box-sizing:border-box;padding:12px;background:#0E0F12;border:1px solid #2E3036;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.6);color:#E6E6E9;font:12px/1.3 -apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,sans-serif;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="flex:1;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9A9AA0">Facilitator</span>
+      <span style="font-size:11px;color:#6A6A70">Shift + F</span>
+      <button onClick="{{ facClose }}" title="Hide" style="width:22px;height:22px;border:none;border-radius:50%;background:#1C1D22;color:#9A9AA0;cursor:pointer;padding:0;font-size:12px">✕</button>
+    </div>
+    <button onClick="{{ facTrigger }}" style="height:32px;border-radius:7px;border:1px solid #33353B;background:#1C1D22;color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-align:left;padding:0 10px" style-hover="background:#26282E">Trigger notification</button>
+    <button onClick="{{ facHey }}" style="height:32px;border-radius:7px;border:1px solid {{ heyBorder }};background:{{ heyBg }};color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-align:left;padding:0 10px;display:flex;align-items:center;justify-content:space-between">
+      <span>{{ heyLabel }}</span><span style="font-size:11px;font-weight:500;color:#B8C6E8">Shift + H</span>
+    </button>
+    <div style="height:32px;display:flex;align-items:center;gap:6px;padding:0 4px 0 10px;border:1px solid #33353B;border-radius:7px;background:#1C1D22">
+      <span style="flex:1;font-weight:600">Countdown</span>
+      <button onClick="{{ facMinus }}" style="width:24px;height:24px;border:none;border-radius:5px;background:#2A2C32;color:#fff;cursor:pointer;padding:0">−</button>
+      <span style="min-width:34px;text-align:center;font-variant-numeric:tabular-nums">{{ facSecs }}s</span>
+      <button onClick="{{ facPlus }}" style="width:24px;height:24px;border:none;border-radius:5px;background:#2A2C32;color:#fff;cursor:pointer;padding:0">+</button>
+    </div>
+    <button onClick="{{ facReset }}" style="height:32px;border-radius:7px;border:1px solid #33353B;background:#1C1D22;color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-align:left;padding:0 10px" style-hover="background:#26282E">Reset prototype</button>
+    <div style="height:1px;background:#26282E;margin:2px 0"></div>
+    <span style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9A9AA0">Switch prototype</span>
+    <sc-for list="{{ facLinks }}" as="l" hint-placeholder-count="5">
+      <a href="{{ l.href }}" style="display:block;padding:6px 10px;border-radius:6px;text-decoration:none;font-size:12px;color:{{ l.color }};background:{{ l.bg }}">{{ l.label }}</a>
+    </sc-for>
+  </div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;testHighlight&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;None&quot;,&quot;Notification&quot;,&quot;Answer&quot;,&quot;Pin&quot;,&quot;Dismiss&quot;,&quot;ZoomMate icon&quot;,&quot;ZoomMate log&quot;],&quot;default&quot;:&quot;None&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Test without Moderator&quot;},&quot;testTutorial&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Test without Moderator&quot;},&quot;testShow&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;None&quot;,&quot;Chat question&quot;,&quot;Audio issue (2A)&quot;,&quot;Connection issue (3A)&quot;],&quot;default&quot;:&quot;None&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Test without Moderator&quot;},&quot;testHey&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Test without Moderator&quot;},&quot;testReset&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Test without Moderator&quot;},&quot;autoShow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;glowDelaySeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:3,&quot;min&quot;:1,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;countdown&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;2 min&quot;,&quot;5 sec&quot;],&quot;default&quot;:&quot;2 min&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;pauseWhileInteracting&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const NOTIFS = [
+  { topic: "Which content will be on the final?", heading: "3 students asked 'Which content will be on the final?'", body: "Questions merged. Pin your answer to the top of main chat.",
+    messages: [
+      { name: "Priya Shah", time: "10:41 AM", text: "Is the final cumulative or just everything after the midterm?" },
+      { name: "Marcus Lee", time: "10:42 AM", text: "which chapters are going to be on the final exam?" },
+      { name: "Elena Torres", time: "10:42 AM", text: "Will today's material on memory consolidation be tested on the final?" } ] },
+  { topic: "Will the review session be recorded?", heading: "2 students asked 'Will the review session be recorded?'", body: "Questions merged. Pin your answer to the top of main chat.",
+    messages: [
+      { name: "Jordan Kim", time: "10:43 AM", text: "I have a lab during Thursday's review session, will it be recorded?" },
+      { name: "Aisha Bello", time: "10:44 AM", text: "Is the review going to be posted on Canvas after?" } ] },
+  { topic: "Can you go back to slide 12?", heading: "4 students asked 'Can you go back to slide 12?'", body: "Similar requests merged. Pin your answer to the top of main chat.",
+    messages: [
+      { name: "Sam Okafor", time: "10:44 AM", text: "Could you go back to the slide with the encoding diagram?" },
+      { name: "Lily Chen", time: "10:45 AM", text: "slide 12 again please, missed the second half" },
+      { name: "Diego Ramirez", time: "10:45 AM", text: "Can you scroll back one? Didn't finish copying it down" },
+      { name: "Hannah Wu", time: "10:45 AM", text: "+1 to going back to slide 12" } ] }
+];
+const DRAFTS = [
+  "The final is cumulative: chapters 1–12, with extra weight on memory (ch. 9–12). Today's consolidation material is included.",
+  "Yes, Thursday's review session will be recorded and posted to Canvas by Friday.",
+  "Going back to slide 12 now. Slides are also posted on Canvas after class."
+];
+const CHAT = [
+  { name: "Noah Patel", time: "10:38 AM", text: "Audio is clear now, thanks!" },
+  { name: "Priya Shah", time: "10:41 AM", text: "Is the final cumulative or just everything after the midterm?" },
+  { name: "Ben Alvarez", time: "10:41 AM", text: "The levels-of-processing example made a lot of sense" },
+  { name: "Marcus Lee", time: "10:42 AM", text: "which chapters are going to be on the final exam?" },
+  { name: "Elena Torres", time: "10:42 AM", text: "Will today's material on memory consolidation be tested on the final?" },
+  { name: "Jordan Kim", time: "10:43 AM", text: "I have a lab during Thursday's review session, will it be recorded?" },
+  { name: "Aisha Bello", time: "10:44 AM", text: "Is the review going to be posted on Canvas after?" },
+  { name: "Sam Okafor", time: "10:44 AM", text: "Could you go back to the slide with the encoding diagram?" },
+  { name: "Lily Chen", time: "10:45 AM", text: "slide 12 again please, missed the second half" },
+  { name: "Diego Ramirez", time: "10:45 AM", text: "Can you scroll back one? Didn't finish copying it down" },
+  { name: "Hannah Wu", time: "10:45 AM", text: "+1 to going back to slide 12" }
+];
+const LOG = [
+  { time: "10:40", type: "summary", text: "ZoomMate summarized: Students found the levels-of-processing example clear. Several asked about the final." },
+  { time: "10:35", type: "questions", text: "2 students asked 'Will the review session be recorded?'", sub: "You answered 'Yes, Thursday's review session will be recorded and posted to Canvas by Friday.'" },
+  { time: "10:32", type: "troubleshooting", text: "ZoomMate assisted with audio issues", italic: true },
+  { time: "10:30", type: "troubleshooting", text: "5 students can't hear your audio" },
+  { time: "10:28", type: "questions", text: "3 students asked 'Is attendance mandatory for the review?'", sub: "You answered 'Attendance is optional. The recording will be on Canvas.'" },
+  { time: "10:22", type: "troubleshooting", text: "ZoomMate assisted with a frozen screen share", italic: true },
+  { time: "10:18", type: "questions", text: "2 students asked 'When is Problem Set 4 due?'", sub: "You answered 'Problem Set 4 is due Friday at 11:59 PM.'" },
+  { time: "10:12", type: "troubleshooting", text: "Your video froze for 6 seconds", sub: "ZoomMate lowered your video quality to keep you connected." }
+];
+const EXTRA_LOG = [
+  { id: "q-slide", time: "10:45", type: "questions", text: "4 students asked 'Can you go back to slide 12?'", done: "You answered 'Going back to slide 12 now. Slides are also posted on Canvas after class.'" },
+  { id: "q-curve", time: "10:44", type: "questions", text: "2 students asked 'Is the midterm curve final?'", done: "You answered 'Yes, the curve is final. Grades are on Canvas.'" },
+  { id: "t-blur", time: "10:43", type: "troubleshooting", text: "3 students say your slides look blurry", done: "ZoomMate turned on Optimize for screen share.", steps: ["Detected low resolution on your screen share", "Turned on Optimize for screen share", "Confirmed slides look sharp for 3 participants"] },
+  { id: "t-echo", time: "10:39", type: "troubleshooting", text: "2 students hear an echo", done: "ZoomMate turned on echo cancellation.", steps: ["Detected your audio playing back through speakers", "Turned on echo cancellation", "Confirmed the echo stopped"] }
+];
+const ZM_CHAT = [
+  { from: "zm", text: "Hi! I'm watching chat and your audio during this lecture. Ask me anything about the session." }
+];
+const fresh = () => ({ glowing: false, cardOpen: false, collapsing: false, mode: "main", queue: [0], remaining: 1, pins: [], answer: "", toastKey: 0, toastOn: false, chatOpen: false, zmOpen: false, zmTab: "log", zmFilter: "all", ...issueFresh() });
+const VIEW = "laptop";
+const issueFresh = () => ({ issue: null, issueOpen: false, issueCollapsing: false, issueMode: "main", resolved: false, resolveLeft: 5000, issueRemaining: 1, lastPath: null, zmMsgs: null, zmTyping: false, guideIssue: null, guideStep: null, guideFinished: false, shareMenu: false, shareSound: false, quit: {}, did_video: false, dockMenu: null, issueLog: [], iHover: false });
+const ISSUES = {
+  audio: {
+    heading: "Audio Issue Detected", body: "The audience can't hear the audio.", log: "The audience can't hear the audio",
+    resolvingBody: "Turning on computer sound…", doneBody: "Your audience should now hear the content sound.",
+    finalText: "Issue resolved. Your audience should now hear the content sound.",
+    fixLines: [
+      { text: "Checking your microphone… working", tone: "ok" },
+      { text: "Checking screen share settings…", tone: "info" },
+      { text: "Computer sound isn't included in your screen share", tone: "warn" },
+      { text: "Turning on Share sound…", tone: "info" },
+      { text: "Share sound is on", tone: "ok" },
+      { text: "Testing playback with 3 participants… audio received", tone: "ok" }
+    ],
+    guideIntro: "Your computer sound isn't being shared. Here's how to turn it on:",
+    stepByStep: true,
+    steps: [{ text: "Click Sharing in the toolbar.", action: "share" }, { text: "Select Share sound.", action: "sound" }, { text: "Play the clip again." }],
+    guideOk: "Share sound is on",
+    fixedSub: "ZoomMate turned on Share sound. You confirmed it's working.",
+    guidedSub: "ZoomMate guided you through turning on Share sound.",
+    fixedSteps: ["Checked your microphone: working", "Found computer sound wasn't included in your screen share", "Turned on Share sound", "Confirmed playback with 3 participants"],
+    guidedSteps: ["Found computer sound wasn't included in your screen share", "Guided you to Sharing → Share sound", "You played the clip again"]
+  },
+  conn: {
+    heading: "Issue Detected", body: "You appear to be cutting off.", note: "You will need to be at your device to resolve the issue.", log: "You appear to be cutting off",
+    resolvingBody: "", doneBody: "Your audience should now hear you clearly.",
+    finalText: "Looks good. Your audience should be able to hear you clearly.",
+    guideIntro: "Your connection looks unstable. Try these:",
+    stepByStep: false,
+    steps: [{ text: "Close open apps besides Zoom.", action: "apps" }, { text: "Turn off your video if the issue continues.", action: "video" }],
+    guideOk: "Your connection looks stable now",
+    guidedSub: "ZoomMate suggested steps to stabilize your connection. You confirmed it's working.",
+    guidedSteps: ["Detected high packet loss on your Wi-Fi", "Suggested closing open apps besides Zoom", "Suggested turning off video if it continued", "You confirmed your connection was stable"]
+  }
+};
+const STEP_TONES = {
+  info: { mark: "•", dotBg: "#ECECEF", dotColor: "#5A5A60" },
+  ok: { mark: "✓", dotBg: "#DDF3E6", dotColor: "#1F9D55" },
+  warn: { mark: "!", dotBg: "#FBEFC8", dotColor: "#9A7300" },
+  num: { mark: "", dotBg: "#141518", dotColor: "#fff" }
+};
+const DOCK = [
+  { name: "Files", short: "Files", bg: "#4A7BD0" },
+  { name: "Web Browser", short: "Web", bg: "#3C8C6E" },
+  { name: "Mail", short: "Mail", bg: "#5A6CC9" },
+  { name: "Slides", short: "Slides", bg: "#D07A2E" },
+  { name: "Zoom", short: "Zoom", bg: "#2D6BF0", running: true },
+  { name: "Slack", short: "Slack", bg: "#4A154B", running: true, closable: true },
+  { name: "Figma", short: "Figma", bg: "#A78BFA", running: true, closable: true },
+  { name: "Music", short: "Music", bg: "#C2457A" },
+  { name: "Settings", short: "Prefs", bg: "#6B6E76" }
+];
+
+const RESOLVE_STEPS = {
+  "ZoomMate assisted with audio issues": ["Checked your microphone input: signal detected", "Found Zoom was using a disconnected headset", "Switched input to MacBook Pro Microphone", "Confirmed audio with 3 participants"],
+  "ZoomMate assisted with a frozen screen share": ["Detected your shared screen hadn't updated for 40 seconds", "Restarted your screen share", "Confirmed participants can see your slides"]
+};
+const LIVE_STEPS = null;
+
+const TUT = { heading: "Notification title", body: "Short description of the notification.", note: "Additional note.", name: "Participant", msg: "Message text", log: "Activity item", sub: "Activity details", step: "Step description", zm: "ZoomMate message", answer: "Your answer will appear here.", topic: "Question" };
+const tutorize = v => {
+  const cur = v.current || {};
+  return { ...v,
+    current: { ...cur, topic: TUT.topic, heading: TUT.heading, body: TUT.body, messages: (cur.messages || []).map(() => ({ name: TUT.name, time: "--:--", text: TUT.msg })) },
+    groups: (v.groups || []).map(g => ({ ...g, items: g.items.map(e => ({ ...e, time: "--:--", text: TUT.log, sub: TUT.sub, fontStyle: "normal", color: "#141518", steps: (e.steps || []).map(st => typeof st === "string" ? TUT.step : { ...st, text: TUT.step }) })) })),
+    zmChat: (v.zmChat || []).map(c => ({ ...c, text: c.align === "flex-end" ? TUT.msg : (c.isStep ? TUT.step : TUT.zm) })),
+    issueHeading: TUT.heading, issueBody: TUT.body, issueNote: TUT.note,
+    chatMessages: (v.chatMessages || []).map(() => ({ name: TUT.name, time: "--:--", text: TUT.msg })),
+    latestPin: { topic: TUT.topic, text: TUT.answer }
+  };
+};
+const groupLog = entries => [
+  { label: "Unresolved", items: entries.filter(e => e.canResolve), color: "#141518", badgeBg: "#141518", badgeColor: "#fff" },
+  { label: "Resolved", items: entries.filter(e => !e.canResolve && e.type !== "summary"), color: "#1F7A45", badgeBg: "#DDF3E6", badgeColor: "#1F7A45" },
+  { label: "Summaries", items: entries.filter(e => !e.canResolve && e.type === "summary"), color: "#6A6A70", badgeBg: "#ECECEF", badgeColor: "#5A5A60" }
+].filter(g => g.items.length).map(g => ({ ...g, count: g.items.length }));
+
+class Component extends DCLogic {
+  state = { ...fresh(), scale: 1 };
+  timers = [];
+  taRef = el => { if (el && document.activeElement !== el) el.focus(); };
+
+  componentDidMount() {
+    this.fit = () => this.setState({ scale: Math.min(1, window.innerWidth / 1440, window.innerHeight / 988) });
+    this.fit();
+    window.addEventListener("resize", this.fit);
+    this.tick = setInterval(() => { this.facTick(); this.step(); }, 100);
+    this.facKeys();
+    this.start();
+  }
+  componentWillUnmount() { window.removeEventListener("resize", this.fit); clearInterval(this.tick); this.clear(); }
+  clear() { this.timers.forEach(clearTimeout); this.timers = []; }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  dur() { return ((this.state && this.state.facSecs) || (this.props.countdown === "5 sec" ? 5 : 120)) * 1000; }
+  facKeys() {
+    if (window.__zmFacKey) window.removeEventListener("keydown", window.__zmFacKey);
+    window.__zmFacKey = e => {
+      const t = e.target && e.target.tagName;
+      if (t === "TEXTAREA" || t === "INPUT" || !e.shiftKey) return;
+      const k = (e.key || "").toLowerCase();
+      if (k === "f") { e.preventDefault(); this.setState(s => ({ facOpen: !s.facOpen })); }
+      if (k === "h") { e.preventDefault(); this.facHey(); }
+    };
+    window.addEventListener("keydown", window.__zmFacKey);
+    if (window.__zmOff) window.__zmOff();
+    const handle = ev => {
+      const m = ev.data || {};
+      if (m.role === "peer") { if (this.onPeer) this.onPeer(m); return; }
+      if (m.role !== "mod") return;
+      if (m.type === "trigger") this.facTrigger();
+      if (m.type === "hey" && !!this.state.heyGlow !== !!m.on) this.facHey();
+      if (m.type === "secs") this.setState(s => ({ facSecs: m.secs, remaining: s.cardOpen ? m.secs * 1000 : s.remaining }));
+      if (m.type === "reset") { this.setState({ heyGlow: false }); this.start(); }
+      if (m.type === "goto" && window.ZMSync) window.ZMSync.goto(m);
+      if (m.type === "ping") this.facReport();
+      if (m.type === "highlight") this.setState({ hl: m.target || null }, () => this.facReport());
+      if (m.type === "tutorial" && !!m.on !== !!this.state.tutorial) this.setState({ tutorial: !!m.on, resolvedOpen: this.state.resolvedOpen }, () => this.facReport());
+      if (m.type === "issue") this.issueShow(m.issue, true);
+      if (m.type === "issueAct" && this.state.issueOpen && !this.state.issueCollapsing) {
+        if (m.action === "fix") this.issueFix(true);
+        if (m.action === "guide") this.issueDevice(true);
+      }
+      if (m.type === "dismiss") {
+        if (this.state.issueOpen && !this.state.issueCollapsing) { this.setState({ heyGlow: false }); this.issueClose(true); }
+        else if (this.state.cardOpen && !this.state.collapsing) { this.setState({ heyGlow: false }); this.renderVals().dismiss(); }
+      }
+    };
+    window.__zmOff = window.ZMSync ? window.ZMSync.on(m => handle({ data: m })) : null;
+    this.facReport();
+  }
+  facReport(localOnly) {
+    if (!window.ZMSync) return;
+    const s = this.state || {};
+    window.ZMSync.post({ role: "proto", issue: s.issueOpen && !s.issueCollapsing && !s.resolved ? s.issue : null, tutorial: !!s.tutorial, hl: s.hl || null, id: window.ZMSync.id, view: window.ZMSync.view(), group: window.ZMSync.group(), file: window.ZMSync.file(), heyGlow: !!s.heyGlow, cardOpen: (!!s.cardOpen && !s.collapsing) || (!!s.issueOpen && !s.issueCollapsing), secs: this.dur() / 1000 }, { localOnly: !!localOnly });
+  }
+  facTick() {
+    const s = this.state;
+    if (s.heyGlow && !s.cardOpen && !s.issueOpen) this.setState({ heyGlow: false });
+    const k = [s.heyGlow, s.cardOpen, s.collapsing, s.facSecs].join("|"), t = Date.now();
+    if (k !== this._rep || t - (this._repT || 0) > 1000) { const ch = k !== this._rep; this._rep = k; this._repT = t; const relay = ch || t - (this._relayT || 0) > 15000; if (relay) this._relayT = t; this.facReport(!relay); }
+    this.peerTick();
+  }
+  peerState() {
+    const s = this.state;
+    return { visible: !!(s.cardOpen && !s.collapsing && s.mode !== "pin" && s.mode !== "answer"), heyGlow: !!s.heyGlow, secs: this.dur() / 1000, paused: !!(s.cardOpen && (s.expanded || s.mode === "preview")) };
+  }
+  peerKey(p) { return [p.visible, p.heyGlow, p.secs, p.paused].join("|"); }
+  peerTick() {
+    if (!window.ZMSync) return;
+    const p = this.peerState(), k = this.peerKey(p);
+    if (this._peerKey === undefined) { this._peerKey = k; return; }
+    if (k === this._peerKey) return;
+    this._peerKey = k;
+    window.ZMSync.post({ role: "peer", group: window.ZMSync.group(), ...p, remaining: this.state.remaining });
+  }
+  onPeer(m) {
+    if (!window.ZMSync || m.group !== window.ZMSync.group()) return;
+    if (m.kind === "issue") return this.onIssuePeer(m);
+    const s = this.state, vis = !!(s.cardOpen && !s.collapsing);
+    const localPaused = !!(s.expanded || s.mode === "preview" || s.mode === "pin" || s.mode === "answer");
+    if (m.secs && m.secs !== this.dur() / 1000) this.setState({ facSecs: m.secs });
+    if (m.visible && !vis) { this.facTrigger(); this.later(() => this.setState({ remaining: m.remaining || this.dur(), heyGlow: !!m.heyGlow }), 60); }
+    if (!m.visible && vis && !localPaused) this.advance({ heyGlow: false });
+    this.setState({ heyGlow: !!m.heyGlow, remotePaused: !!m.paused }, () => { this._peerKey = this.peerKey(this.peerState()); });
+  }
+  facTrigger() {
+    const s = this.state;
+    this.clear();
+    this.setState({ queue: s.queue && s.queue.length ? s.queue : [0], cardOpen: false, collapsing: false, glowing: true, zmOpen: false, resolved: false, fixed: false, heyGlow: false, issueOpen: false, issueCollapsing: false }, () => this.openCard());
+  }
+  stopHey() { if (this.state.heyGlow) this.setState({ heyGlow: false }, () => this.facReport()); }
+  facHey() {
+    const s = this.state;
+    if (s.heyGlow) return this.setState({ heyGlow: false });
+    if ((!s.cardOpen || s.collapsing) && !s.issueOpen) this.facTrigger();
+    this.setState({ heyGlow: true });
+  }
+  facSetSecs(d) {
+    const n = (d < 0 ? 5 : 120);
+    this.setState(s => ({ facSecs: n, remaining: s.cardOpen ? n * 1000 : s.remaining }));
+  }
+  facVals() {
+    const s = this.state, on = !!s.heyGlow;
+    const here = decodeURIComponent((location.pathname.split("/").pop() || ""));
+    const files = [
+      ["1A + 1B - Chat Summary Notification (Projector).dc.html", "1A + 1B · Chat summary, projector"],
+      ["1C + 1D - Chat Summary Notification (Laptop).dc.html", "1C + 1D · Chat summary, laptop"],
+      ["2A - Troubleshooting (Projector).dc.html", "2A · Troubleshooting, projector"],
+      ["2B + 2C - Troubleshooting (Laptop).dc.html", "2B + 2C · Troubleshooting, laptop"],
+      ["3A - Troubleshooting (Projector).dc.html", "3A · Connection, projector"]
+    ];
+    return {
+      facOpen: false,
+      heyAnim: on ? "zmHey 1.4s ease-in-out infinite" : "none",
+      facClose: () => this.setState({ facOpen: false }),
+      facTrigger: () => this.facTrigger(),
+      facHey: () => this.facHey(),
+      facReset: () => { this.setState({ heyGlow: false }); this.start(); },
+      facMinus: () => this.facSetSecs(-5),
+      facPlus: () => this.facSetSecs(5),
+      facSecs: this.dur() / 1000,
+      heyLabel: on ? "Stop listening glow" : "\u2018Hey ZoomMate\u2019 glow",
+      heyBg: on ? "#2D6BF0" : "#1C1D22",
+      heyBorder: on ? "#5B8CFF" : "#33353B",
+      cardShadow: on ? "0 0 0 2px #5B8CFF, 0 0 28px 8px rgba(91,140,255,.55), 0 10px 30px rgba(0,0,0,.45)" : "0 10px 30px rgba(0,0,0,.45)",
+      facLinks: files.map(([f, label]) => ({ href: encodeURIComponent(f), label, color: f === here ? "#fff" : "#B0B0B6", bg: f === here ? "#26282E" : "transparent" }))
+    };
+  }
+
+  zmChatRef = el => { this.chatEl = el; };
+
+  toggleMic() {
+    if (this.state.listening) { (this.micTimers || []).forEach(clearTimeout); this.micTimers = []; this.setState({ listening: false }); return; }
+    const words = ((this.state.tutorial || this.props.testTutorial) ? TUT.answer : (DRAFTS[this.state.queue[0]] || DRAFTS[0])).split(" ");
+    const base = this.state.answer ? this.state.answer.replace(/\s*$/, " ") : "";
+    this.setState({ listening: true });
+    this.micTimers = words.map((w, i) => setTimeout(() => this.setState({ answer: base + words.slice(0, i + 1).join(" ") }), 400 + i * 140));
+    this.micTimers.push(setTimeout(() => this.setState({ listening: false }), 400 + words.length * 140 + 300));
+  }
+  testProps(prev) {
+    const p = this.props;
+    if (p.testShow !== prev.testShow && p.testShow && p.testShow !== "None") {
+      if (p.testShow === "Chat question") this.facTrigger();
+      if (p.testShow === "Audio issue (2A)") this.issueShow("audio");
+      if (p.testShow === "Connection issue (3A)") this.issueShow("conn");
+    }
+    if (p.testHey !== prev.testHey && prev.testHey !== undefined && !!p.testHey !== !!this.state.heyGlow) this.facHey();
+    if (p.testReset !== prev.testReset && prev.testReset !== undefined) this.start();
+  }
+  issueStep() {
+    const s = this.state;
+    if (!s.issueOpen || s.issueCollapsing) return;
+    if (s.resolved === "resolving") { this.setState({ resolveLeft: Math.max(0, s.resolveLeft - 100) }); return; }
+    if (s.issueMode === "device" || s.heyGlow) return;
+    const r = s.issueRemaining - 100;
+    if (r <= 0) { if (s.resolved === "done") this.iMarkDone(); this.issueClose(true); }
+    else this.setState({ issueRemaining: r });
+  }
+  iPost(action, extra) { if (window.ZMSync) window.ZMSync.post({ role: "peer", group: window.ZMSync.group(), kind: "issue", action, ...(extra || {}) }); }
+  iQuiet() { this._peerKey = this.peerKey(this.peerState()); }
+  iSay(msg) { this.setState(s => ({ zmMsgs: [...(s.zmMsgs || ZM_CHAT), msg] })); }
+  iClearPrompts() { this.setState(s => ({ zmMsgs: (s.zmMsgs || ZM_CHAT).map(m => ({ ...m, final: false, guideEnd: false })) })); }
+  iMarkDone() {
+    const s = this.state, I = ISSUES[s.issue];
+    if (!I) return;
+    const guided = s.lastPath === "guide";
+    this.setState({ issueLog: s.issueLog.map(e => e.issue === s.issue && !e.done ? { ...e, done: true, sub: guided ? I.guidedSub : I.fixedSub, steps: guided ? I.guidedSteps : I.fixedSteps } : e) });
+  }
+  issueShow(id, r) {
+    if (!ISSUES[id]) return;
+    this.clear();
+    const s = this.state;
+    const log = s.issueLog.some(e => e.issue === id && !e.done) ? s.issueLog : [{ issue: id, time: "10:47", done: false }, ...s.issueLog];
+    this.setState({ cardOpen: false, collapsing: false, issue: id, issueOpen: true, issueCollapsing: false, issueMode: "main", resolved: false, resolveLeft: 5000, issueRemaining: this.dur(), glowing: true, iHover: false, guideStep: null, shareMenu: false, zmTyping: false, issueLog: log }, () => this.iQuiet());
+    if (!r) this.iPost("show", { issue: id });
+  }
+  issueClose(r) {
+    if (!this.state.issueOpen) return;
+    this.setState(s => ({ issueCollapsing: true, iHover: false, glowing: s.cardOpen ? s.glowing : false }));
+    this.later(() => this.setState({ issueOpen: false, issueCollapsing: false }), 420);
+    if (!r) this.iPost("close");
+  }
+  issueDevice(r) { this.setState({ issueMode: "device" }); if (!r) this.iPost("device"); }
+  issueFix(r) {
+    const s = this.state, I = ISSUES[s.issue];
+    if (!I || !I.fixLines || s.resolved === "resolving") return;
+    const retry = s.resolved === "done";
+    this.iClearPrompts();
+    this.setState({ issueOpen: true, issueCollapsing: false, issueMode: "main", resolved: "resolving", resolveLeft: 5000, lastPath: "fix", guideStep: null, shareMenu: false, glowing: false, iHover: false });
+    this.iSay({ from: "me", text: retry ? "Try again" : "Fix: " + I.log + "." });
+    I.fixLines.forEach((st, i) => this.later(() => this.iSay({ from: "zm", step: true, ...st }), 500 + i * 700));
+    this.later(() => {
+      this.setState({ resolved: "done", issueRemaining: this.dur(), shareSound: true });
+      this.iSay({ from: "zm", strong: true, final: true, text: I.finalText });
+    }, 5000);
+    if (!r) this.iPost("fix");
+  }
+  issueStartGuide(r) {
+    const s = this.state, I = ISSUES[s.issue];
+    if (!I) return;
+    this.setState({ lastPath: "guide", resolved: false, issueMode: "main", glowing: false });
+    if (s.issueOpen) { this.setState({ issueCollapsing: true }); this.later(() => this.setState({ issueOpen: false, issueCollapsing: false }), 420); }
+    if (!r) this.iPost("guide");
+    if (VIEW !== "laptop") return;
+    const retry = (s.zmMsgs || []).some(m => m.final);
+    this.setState({ zmOpen: true, zmTab: "chat", chatOpen: false, guideIssue: s.issue, guideFinished: false, guideStep: null, shareMenu: false });
+    this.iClearPrompts();
+    this.iSay({ from: "me", text: retry ? "Try again" : "Guide me: " + I.log + "." });
+    this.later(() => this.setState({ zmTyping: true }), 150);
+    this.later(() => { this.setState({ zmTyping: false }); this.iSay({ from: "zm", text: I.guideIntro }); }, 800);
+    if (I.stepByStep) this.later(() => this.iPostStep(0), 1500);
+    else {
+      I.steps.forEach((st, i) => this.later(() => this.iSay({ from: "zm", step: true, tone: "num", mark: String(i + 1), text: st.text }), 1500 + i * 700));
+      this.later(() => this.iCheckConn(), 1500 + I.steps.length * 700);
+    }
+  }
+  iPostStep(i) {
+    const I = ISSUES[this.state.guideIssue], st = I.steps[i];
+    this.iClearPrompts();
+    this.setState({ guideStep: i, shareMenu: st.action === "sound" });
+    this.iSay({ from: "zm", step: true, tone: "num", mark: String(i + 1), text: st.text, guideEnd: true });
+  }
+  iGuideNext() {
+    const s = this.state, I = ISSUES[s.guideIssue];
+    if (s.guideStep == null || !I) return;
+    if (s.guideStep >= I.steps.length - 1) this.iGuideDone(); else this.iPostStep(s.guideStep + 1);
+  }
+  iCheckConn() {
+    const s = this.state, q = s.quit || {};
+    if (s.guideIssue !== "conn" || s.guideFinished || s.lastPath !== "guide") return;
+    if (q.Slack && q.Figma && s.did_video) { this.setState({ guideFinished: true }); this.iGuideDone(); }
+  }
+  iGuideDone() {
+    const I = ISSUES[this.state.guideIssue];
+    if (!I) return;
+    this.iClearPrompts();
+    this.setState({ guideStep: null, shareMenu: false, zmTyping: true });
+    this.later(() => { this.setState({ zmTyping: false }); this.iSay({ from: "zm", step: true, tone: "ok", text: I.guideOk }); }, 700);
+    this.later(() => this.setState({ zmTyping: true }), 850);
+    this.later(() => {
+      this.setState({ zmTyping: false, resolved: "done" });
+      this.iSay({ from: "zm", strong: true, final: true, text: I.finalText });
+      this.iPost("done");
+    }, 1500);
+  }
+  issueDoneRemote() {
+    if (VIEW === "laptop") { this.setState({ resolved: "done", lastPath: "guide" }); return; }
+    this.setState({ issueOpen: true, issueCollapsing: false, resolved: "done", issueMode: "main", lastPath: "guide", issueRemaining: this.dur(), glowing: true });
+  }
+  issueConfirm(r) {
+    this.iMarkDone();
+    this.iClearPrompts();
+    if (this.state.issueOpen) this.issueClose(true);
+    this.setState(s => ({ glowing: s.cardOpen ? s.glowing : false }));
+    if (!r) this.iPost("confirm");
+  }
+  issueRetry() { if (this.state.lastPath === "guide") this.issueStartGuide(); else this.issueFix(); }
+  onIssuePeer(m) {
+    const a = m.action;
+    if (a === "show") this.issueShow(m.issue, true);
+    else if (a === "close") this.issueClose(true);
+    else if (a === "device") this.issueDevice(true);
+    else if (a === "fix") this.issueFix(true);
+    else if (a === "guide") this.issueStartGuide(true);
+    else if (a === "done") this.issueDoneRemote();
+    else if (a === "confirm") this.issueConfirm(true);
+  }
+  iSharing() { const s = this.state; if (s.guideIssue === "audio" && s.guideStep === 0) this.iGuideNext(); else this.setState({ shareMenu: !s.shareMenu }); }
+  iShareSound() { const s = this.state; this.setState({ shareSound: true }); if (s.guideIssue === "audio" && s.guideStep === 1) this.iGuideNext(); else this.setState({ shareMenu: false }); }
+  iQuit(name) { this.setState(s => ({ quit: { ...s.quit, [name]: true }, dockMenu: null }), () => this.iCheckConn()); }
+  iToggleVideo() { this.setState(s => ({ did_video: !s.did_video }), () => this.iCheckConn()); }
+  issueEntries() {
+    const s = this.state;
+    if (s.zmFilter !== "all" && s.zmFilter !== "troubleshooting") return [];
+    return (s.issueLog || []).map(e => ({
+      time: e.time, type: "troubleshooting", text: ISSUES[e.issue].log, sub: e.done ? e.sub : "", steps: e.done ? e.steps : null,
+      hasSub: !!(e.done && e.sub), canResolve: !e.done, fontStyle: "normal", color: "#141518",
+      onResolve: () => { this.setState({ zmOpen: false }); this.issueShow(e.issue); }
+    }));
+  }
+  issueVals() {
+    const s = this.state, I = ISSUES[s.issue] || ISSUES.audio, res = s.resolved, im = s.issueMode;
+    const gi = ISSUES[s.guideIssue];
+    const inAudio = s.guideIssue === "audio" && s.guideStep != null;
+    return {
+      issueOpen: !!s.issueOpen,
+      tutArrow: false,
+      issueAnim: s.issueCollapsing ? "zmCollapse .42s ease-in forwards" : "zmIn .35s cubic-bezier(.2,.8,.2,1)",
+      issueHeading: res === "resolving" ? "Resolving issue" : res === "done" ? "Issue resolved" : I.heading,
+      issueBody: res === "resolving" ? I.resolvingBody : res === "done" ? I.doneBody : im === "device" ? "You will need to be at your laptop to follow these steps." : I.body,
+      issueHasNote: !res && im === "main" && !!I.note,
+      issueNote: I.note || "",
+      issueIconTone: res === "done" ? "#1F9D55" : "#2D2BE0",
+      iMainFix: !res && im === "main" && !!I.fixLines,
+      iMainStart: !res && im === "main" && !I.fixLines,
+      iDevice: !res && im === "device",
+      iDone: res === "done",
+      iProgress: res === "resolving" ? s.resolveLeft / 5000 : Math.max(0, s.issueRemaining / this.dur()),
+      iBarColor: res === "done" ? "#1F9D55" : res === "resolving" ? "#9A9AA0" : "#2D6BF0",
+      iShowX: false,
+      iEnter: () => this.setState({ iHover: true }),
+      iLeave: () => this.setState({ iHover: false }),
+      iFix: () => this.issueFix(),
+      iGuide: () => this.issueDevice(),
+      iStart: () => this.issueStartGuide(),
+      iDismiss: () => this.issueClose(),
+      iConfirm: () => this.issueConfirm(),
+      iRetry: () => this.issueRetry(),
+      zmChat: (s.zmMsgs || ZM_CHAT).map(c => ({
+        text: c.text, isStep: !!c.step, isBubble: !c.step,
+        ...(c.step ? STEP_TONES[c.tone] || STEP_TONES.info : {}),
+        ...(c.mark ? { mark: c.mark } : {}),
+        hasActions: !!c.final, hasGuideActions: !!c.guideEnd,
+        align: c.from === "me" ? "flex-end" : "flex-start",
+        bg: c.from === "me" ? "#141518" : c.strong ? "#DDF3E6" : "#F1F1F3",
+        color: c.from === "me" ? "#fff" : "#141518",
+        weight: c.strong ? "600" : "400"
+      })),
+      zmTyping: !!s.zmTyping,
+      zmChatRef: this.zmChatRef,
+      guideNextLabel: gi && s.guideStep != null && s.guideStep >= gi.steps.length - 1 ? "Done" : "Next",
+      guideNext: () => this.iGuideNext(),
+      guideFix: () => this.issueFix(),
+      onSharing: () => this.iSharing(),
+      onShareSound: () => this.iShareSound(),
+      shareMenu: !!s.shareMenu,
+      shareOutline: inAudio && s.guideStep === 0 ? "2px solid #F5C84B" : "none",
+      shareAnim: inAudio && s.guideStep === 0 ? "zmPulse 1.6s ease-in-out infinite" : "none",
+      soundItemBg: inAudio && s.guideStep === 1 ? "rgba(245,200,75,.14)" : "transparent",
+      soundOutline: inAudio && s.guideStep === 1 ? "2px solid #F5C84B" : "none",
+      soundBoxBg: s.shareSound ? "#2D6BF0" : "transparent",
+      soundCheck: s.shareSound ? "✓" : "",
+      videoOn: !s.did_video, videoOff: !!s.did_video,
+      videoLabel: s.did_video ? "Start video" : "Stop video",
+      videoColor: s.did_video ? "#FF6B6B" : "#D8D8DB",
+      toggleVideo: () => this.iToggleVideo(),
+      dockApps: DOCK.map(a => {
+        const closed = !!(s.quit || {})[a.name], running = !!a.running && !closed;
+        return { ...a, opacity: closed ? "0.45" : "1", dot: running ? "#D8D8DB" : "transparent",
+          cursor: running && a.name !== "Zoom" ? "pointer" : "default",
+          menuOpen: s.dockMenu === a.name,
+          onClick: e => { if (e && e.preventDefault) e.preventDefault(); if (!running || a.name === "Zoom") return; this.setState({ dockMenu: s.dockMenu === a.name ? null : a.name }); },
+          onQuit: () => this.iQuit(a.name) };
+      })
+    };
+  }
+  start() {
+    this.clear();
+    this.setState(fresh());
+    if (this.props.autoShow ?? false) this.later(() => { this.setState({ glowing: true }); this.openCard(); }, (this.props.glowDelaySeconds ?? 3) * 1000);
+  }
+  openCard() {
+    const s = this.state;
+    if (!s.queue.length || s.cardOpen) return;
+    this.setState({ hover: false, cardOpen: true, collapsing: false, mode: "main", expanded: false, answer: "", remaining: this.dur() });
+  }
+  step() {
+    this.issueStep();
+    const s = this.state;
+    if (!s.cardOpen || s.collapsing) return;
+    const paused = (this.props.pauseWhileInteracting ?? true) && (s.mode !== "main" || s.expanded);
+    if (paused || s.heyGlow || s.remotePaused) return;
+    const r = s.remaining - 100;
+    if (r <= 0) {
+      this.setState({ remaining: 0, collapsing: true });
+      this.later(() => this.setState({ cardOpen: false, collapsing: false }), 420);
+    } else this.setState({ remaining: r });
+  }
+  advance(extra) {
+    const queue = this.state.queue.slice(1);
+    this.setState({ ...extra, cardOpen: false, mode: "main", answer: "", queue, glowing: queue.length > 0 });
+  }
+
+  renderVals() { const v = this.baseVals(); const out = { ...v, ...this.facVals(), ...this.issueVals(), groups: this.collapsible(groupLog([...this.issueEntries(), ...v.entries.filter(e => e.type !== "summary"), ...this.extraEntries()].map(e => this.withSteps(e)))) }; const tut = this.state.tutorial || this.props.testTutorial;
+    const t = tut ? tutorize(out) : out;
+    const hl = this.state.hl || (this.props.testHighlight && this.props.testHighlight !== "None" ? this.props.testHighlight : null);
+    const on = k => hl === k ? "4px solid rgba(245,184,59,.6)" : "none";
+    t.tutArrow = hl === "Notification";
+    t.hlRespond = on("Answer"); t.hlPin = on("Pin"); t.hlDismiss = on("Dismiss"); t.hlZm = on("ZoomMate icon"); t.hlLog = hl === "ZoomMate log" ? "3px solid #F5B83B" : "none";
+    return t; }
+  componentDidUpdate(prev, prevState) {
+    this.testProps(prev || {});
+    { const s = this.state, k = s.issueOpen && !s.issueCollapsing && !s.resolved ? s.issue : null; if (k !== this._repIssue || !!s.heyGlow !== this._repHey) { this._repIssue = k; this._repHey = !!s.heyGlow; this.facReport(); } }
+    const ps = prevState || {}, s = this.state;
+    const shown = (s.cardOpen && !ps.cardOpen) || (s.issueOpen && !ps.issueOpen) || (s.issueOpen && s.issue !== ps.issue);
+    if (shown && (s.tutorial || this.props.testTutorial)) {
+      clearTimeout(this._tutT);
+
+    }
+    const n = (this.state.zmMsgs || []).length + (this.state.zmTyping ? 1 : 0);
+    if (this.chatEl && n !== this._msgN) { this._msgN = n; this.chatEl.scrollTop = this.chatEl.scrollHeight; }
+  }
+  _unusedRV() { }
+  extraEntries() {
+    const s = this.state, done = s.extraDone || {};
+    return EXTRA_LOG.filter(e => s.zmFilter === "all" || e.type === s.zmFilter).map(e => {
+      const d = !!done[e.id];
+      return { time: e.time, type: e.type, text: e.text, sub: d ? e.done : "", steps: d && e.steps ? e.steps : null, hasSub: d, canResolve: !d, fontStyle: "normal", color: "#141518",
+        onResolve: () => this.setState(st => ({ extraDone: { ...(st.extraDone || {}), [e.id]: true } })) };
+    });
+  }
+  collapsible(groups) {
+    const open = !!this.state.resolvedOpen;
+    const tag = e => e.type === "troubleshooting"
+      ? { ...e, isQ: false, isT: true, kindLabel: "Troubleshooting", iconBg: "#FDECEA", iconColor: "#C0392B" }
+      : { ...e, isQ: true, isT: false, kindLabel: "Question", iconBg: "#E8EFFE", iconColor: "#2D6BF0" };
+    groups = groups.map(g => ({ ...g, items: g.items.map(tag) }));
+    return groups.map(g => {
+      if (g.label !== "Resolved") return { ...g, onToggle: () => {}, cursor: "default", chevron: "0deg", chevronOpacity: "0" };
+      return { ...g, items: open ? g.items : [], onToggle: () => this.setState({ resolvedOpen: !open }), cursor: "pointer", chevron: open ? "180deg" : "0deg", chevronOpacity: "1" };
+    });
+  }
+  withSteps(e) {
+    const steps = e.steps || RESOLVE_STEPS[e.text] || (e.live && e.type === "troubleshooting" && this.state.fixed ? LIVE_STEPS : null);
+    if (!steps) return { ...e, hasSteps: false };
+    const key = e.time + e.text, open = !!(this.state.logOpen || {})[key];
+    return { ...e, hasSteps: true, steps, open, chevron: open ? "180deg" : "0deg",
+      toggleLabel: open ? "Hide steps" : "How ZoomMate resolved it",
+      onToggle: () => this.setState(s => ({ logOpen: { ...(s.logOpen || {}), [key]: !open } })) };
+  }
+  baseVals() {
+    const s = this.state;
+    const current = NOTIFS[s.queue[0]] || NOTIFS[0];
+    const latestPin = s.pins[s.pins.length - 1] || { topic: "", text: "" };
+    return {
+      scale: s.scale,
+      iconBg: s.glowing ? "rgba(245,200,75,.16)" : "transparent",
+      iconColor: s.glowing ? "#F5C84B" : "#8E8E93",
+      glowAnim: s.glowing ? "zmPulse 2.2s ease-in-out infinite" : "none",
+      onIconClick: () => this.setState({ zmOpen: !s.zmOpen, cardOpen: false, collapsing: false }),
+      onIconHover: () => { if (!s.glowing || s.zmOpen || (s.cardOpen && !s.collapsing)) return; this.clear(); this.setState({ queue: s.queue.length ? s.queue : [0], collapsing: false, cardOpen: false }, () => this.openCard()); },
+      iconOutline: s.zmOpen ? "2px solid #F5C84B" : "none",
+      zmOpen: s.zmOpen,
+      closeZm: () => this.setState({ zmOpen: false }),
+      isLogTab: s.zmTab === "log", isChatTab: s.zmTab === "chat",
+      toLogTab: () => this.setState({ zmTab: "log" }),
+      toChatTab: () => this.setState({ zmTab: "chat" }),
+      logTabBg: s.zmTab === "log" ? "#FFFFFF" : "transparent",
+      logTabColor: s.zmTab === "log" ? "#141518" : "#6A6A70",
+      logTabShadow: s.zmTab === "log" ? "0 1px 3px rgba(0,0,0,.12)" : "none",
+      chatTabBg: s.zmTab === "chat" ? "#FFFFFF" : "transparent",
+      chatTabColor: s.zmTab === "chat" ? "#141518" : "#6A6A70",
+      chatTabShadow: s.zmTab === "chat" ? "0 1px 3px rgba(0,0,0,.12)" : "none",
+      filters: [["all", "All"], ["questions", "Questions"], ["troubleshooting", "Troubleshooting"]].map(([id, label]) => {
+        const on = s.zmFilter === id;
+        return { label, bg: on ? "#141518" : "#fff", color: on ? "#fff" : "#141518", border: on ? "#141518" : "#CFCFD4", onClick: () => this.setState({ zmFilter: id }) };
+      }),
+      entries: (() => {
+        const pin = s.pins.find(p => p.topic === NOTIFS[0].topic);
+        const live = { time: "10:46", type: "questions", text: NOTIFS[0].heading, sub: pin ? `You answered '${pin.text}'` : "", live: true };
+        return [live, ...LOG]
+          .filter(e => s.zmFilter === "all" || e.type === s.zmFilter)
+          .map(e => ({
+            ...e,
+            hasSub: !!e.sub,
+            canResolve: !!e.live && !pin,
+            fontStyle: e.italic ? "italic" : "normal",
+            color: e.italic ? "#4A4A50" : "#141518",
+            onResolve: () => {
+              this.setState({ zmOpen: false, glowing: true, hover: false, cardOpen: true, collapsing: false, mode: "pin", answer: DRAFTS[0], remaining: this.dur() });
+            }
+          }));
+      })(),
+      zmChat: ZM_CHAT.map(c => ({ text: c.text, align: c.from === "zm" ? "flex-start" : "flex-end", bg: c.from === "zm" ? "#F1F1F3" : "#141518", color: c.from === "zm" ? "#141518" : "#fff" })),
+      cardOpen: s.cardOpen,
+      cardRight: s.chatOpen ? "356px" : "16px",
+      onEnter: () => this.setState({ hover: true }),
+      onLeave: () => this.setState({ hover: false }),
+      showX: false,
+      cardAnim: s.collapsing ? "zmCollapse .42s ease-in forwards" : "zmIn .35s cubic-bezier(.2,.8,.2,1)",
+      hasBack1: s.queue.length > 1,
+      hasBack2: s.queue.length > 2,
+      current,
+      expanded: !!s.expanded,
+      expandLabel: s.expanded ? "Hide questions" : `See ${current.messages.length} questions`,
+      chevronRot: s.expanded ? "180deg" : "0deg",
+      toggleExpand: () => this.setState({ expanded: !s.expanded }),
+      isMain: s.mode === "main", isPreview: s.mode === "preview", isPin: s.mode === "pin" || s.mode === "answer",
+      toAnswer: () => this.setState({ mode: "answer", answer: "", listening: false }),
+      answerPlaceholder: s.listening ? "Listening…" : "Type or dictate your answer…",
+      micBg: s.listening ? "#D93A3A" : "#F1F1F3",
+      micColor: s.listening ? "#fff" : "#5A5A60",
+      micAnim: s.listening ? "zmMic 1.2s ease-in-out infinite" : "none",
+      micBorder: s.listening ? "#D93A3A" : "#CFCFD4",
+      onMic: () => this.toggleMic(),
+      submitLabel: s.mode === "answer" ? "Send" : "Pin",
+      isAnswerMode: s.mode === "answer",
+      doPinFromAnswer: () => {
+        const text = s.answer.trim() || DRAFTS[s.queue[0]] || "";
+        this.advance({ pins: [...s.pins, { topic: current.topic, text }], toastMode: "pin", toastOn: true, toastKey: s.toastKey + 1 });
+        const k = s.toastKey + 1;
+        this.later(() => { if (this.state.toastKey === k) this.setState({ toastOn: false }); }, 3000);
+      },
+      toastText: s.toastMode === "answer" ? "Answer sent to chat" : "Answer pinned to chat",
+      progress: Math.max(0, s.remaining / this.dur()),
+      toPreview: () => this.setState({ mode: "preview" }),
+      toPin: () => this.setState({ mode: "pin", answer: "", listening: false }),
+      toMain: () => this.setState({ mode: "main" }),
+      dismiss: () => this.advance({}),
+      answer: s.answer,
+      taRef: this.taRef,
+      onAnswer: e => this.setState({ answer: e.target.value }),
+      pinOpacity: 1,
+      doPin: () => {
+        const text = s.answer.trim() || DRAFTS[s.queue[0]] || "";
+        if (s.mode === "answer") this.advance({ sent: [...(s.sent || []), { topic: current.topic, text }], toastMode: "answer", toastOn: true, toastKey: s.toastKey + 1 });
+        else this.advance({ pins: [...s.pins, { topic: current.topic, text }], toastMode: "pin", toastOn: true, toastKey: s.toastKey + 1 });
+        const k = s.toastKey + 1;
+        this.later(() => { if (this.state.toastKey === k) this.setState({ toastOn: false }); }, 3000);
+      },
+      toastOn: s.toastOn, toastKey: s.toastKey,
+      chatOpen: s.chatOpen,
+      chatBtnBg: s.chatOpen ? "#2E2F34" : "transparent",
+      toggleChat: () => this.setState({ chatOpen: !s.chatOpen }),
+      chatMessages: CHAT,
+      hasPin: s.pins.length > 0,
+      latestPin,
+      pinCountLabel: s.pins.length > 1 ? s.pins.length + " pinned" : "",
+      reset: () => this.start()
+    };
+  }
+}
+</script>
+</body>
+</html>
